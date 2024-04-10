@@ -51,21 +51,17 @@ pipeline {
          }
 
         stage("Build & Push Docker Image") {
-    steps {
-        script {
-            // Login to Docker registry
-            sh "echo \${DOCKER_PASS} | docker login -u \${DOCKER_USER} --password-stdin https://index.docker.io/v1/"
-
-            // Build Docker image
-            def docker_image = docker.build("${IMAGE_NAME}")
-
-            // Push Docker image
-            docker.withRegistry('', DOCKER_USER) {
-                docker_image.push("${IMAGE_TAG}")
-                docker_image.push("latest")
-            }
-          }
-         } 
-       }
-    }
+             steps {
+                 script {
+                     docker.withRegistry('',DOCKER_PASS) {
+                         docker_image = docker.build "${IMAGE_NAME}"
+                     }
+                     docker.withRegistry('',DOCKER_PASS) {
+                         docker_image.push("${IMAGE_TAG}")
+                         docker_image.push('latest')
+                    }
+                }
+             } 
+         }
+      }
   }

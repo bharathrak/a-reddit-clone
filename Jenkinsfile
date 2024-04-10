@@ -53,7 +53,7 @@ pipeline {
         stage("Build & Push Docker Image") {
              steps {
                  script {
-                     docker.withRegistry('',DOCKER_PASS) {
+                     sh "echo \${DOCKER_PASS} | docker login -u \${DOCKER_USER} --password-stdin https://index.docker.io/v1/ {
                          docker_image = docker.build "${IMAGE_NAME}"
                      }
                      docker.withRegistry('',DOCKER_PASS) {
